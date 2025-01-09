@@ -15,16 +15,11 @@
 # Build the manager binary
 FROM golang:1.23.3-alpine3.20 AS builder
 
-ENV GOSUMDB="off" \
-    GO111MODULE="on" \
-    GOOS="linux" \
-    CGO_ENABLED="0"
-
 WORKDIR /workspace
 
 COPY ./ ./
 
-RUN go build -o duplicator ./main.go
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 GO111MODULE=on go build -o duplicator ./main.go
 
 # Copy to vanilla alpine container
 FROM golang:1.23.3-alpine3.20
